@@ -3,9 +3,8 @@
 #include <string>
 
 using namespace std;
-string joinSecondStringToFirst(string &s1, string &s2, int offset)
+void joinSecondStringToFirst(string &s1, string &s2, int offset)
 {
-    string result = "";
     auto iters1 = rbegin(s1);
     auto iters2 = rbegin(s2);
     int carry = 0;
@@ -13,42 +12,38 @@ string joinSecondStringToFirst(string &s1, string &s2, int offset)
     {
         if (iters1 != rend(s1))
         {
-            result.push_back(*iters1);
             iters1++;
         }
     }
-    while (iters1 != rend(s1) || iters2 != rend(s2))
+    while (iters2 != rend(s2))
     {
         int sint1 = 0;
         int sint2 = 0;
         if (iters1 != rend(s1))
         {
-
-            sint1 = *iters1 - '0';
-            iters1++;
+            if (*iters1 == '*')
+                sint1 = 0;
+            else
+                sint1 = *iters1 - '0';
         }
         if (iters2 != rend(s2))
         {
-
             sint2 = *iters2 - '0';
             iters2++;
         }
         char val = (sint1 + sint2 + carry) % 10 + '0';
         carry = (sint1 + sint2 + carry) / 10;
-        result.push_back(val);
+        *iters1 = val;
+        if (iters1 != rend(s1))
+            iters1++;
     }
     if (carry)
-        result.push_back(carry + '0');
-    reverse(begin(result), end(result));
-    return result;
+        *iters1 = carry + '0';
 }
-string multiplyStrings(string &s1, string &s2)
+void multiplyStrings(string &s1, string &s2, int length1, int length2, string &output)
 {
-    int length1 = s1.length();
-    int length2 = s2.length();
     string &multiplier = s1;
     string &multiplicand = s2;
-    string output = "";
     if (length1 > length2)
     {
         multiplier.swap(multiplicand);
@@ -73,17 +68,28 @@ string multiplyStrings(string &s1, string &s2)
             intermediate.push_back(
                 carry + '0');
         reverse(intermediate.begin(), intermediate.end());
-        output = joinSecondStringToFirst(output, intermediate, ++offset);
+        joinSecondStringToFirst(output, intermediate, ++offset);
     }
     return output;
 }
 int main()
 {
     // string multiplier1 = "456";
-    string multiplier1 = "27121";
-    string multiplier2 = "51221";
-    string output = "0";
+    //string multiplier1 = "27121";
+    //string multiplier2 = "51221";
+    string multiplier1 = "10";
+    string multiplier2 = "10";
+    int length1 = multiplier1.length();
+    int length2 = multiplier2.length();
+    int maxLength = length1 + length2;
+    string output(length1 + length2, '*');
     if (multiplier1 != "0" && multiplier2 != "0")
-        output = multiplyStrings(multiplier1, multiplier2);
+    {
+        multiplyStrings(multiplier1, multiplier2, length1, length2, output);
+    }
+    else
+        output = "0";
+    if (*begin(output) == '*')
+        output.erase(begin(output));
     return 1;
 }
