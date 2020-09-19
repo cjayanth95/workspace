@@ -3,6 +3,7 @@
 #include <string>
 
 using namespace std;
+//No longer necessary
 void joinSecondStringToFirst(string &s1, string &s2, int offset)
 {
     auto iters1 = rbegin(s1);
@@ -49,36 +50,62 @@ void multiplyStrings(string &s1, string &s2, int length1, int length2, string &o
         multiplier.swap(multiplicand);
     }
 
-    int offset = -1;
+    int offset = 0;
+    int carryG = 0;
     for (auto it = rbegin(multiplier); it != rend(multiplier); ++it)
     {
+        auto iters1 = rbegin(output);
+        int shift = offset;
+        while (shift--)
+        {
+            if (iters1 != rend(s1))
+            {
+                iters1++;
+            }
+        }
         int multiplyingInt = *it - '0';
-        int carry = 0;
-        string intermediate = "";
         for (auto itMultiplicand = rbegin(multiplicand); itMultiplicand != rend(multiplicand); ++itMultiplicand)
         {
             int multiplicandInt = *itMultiplicand - '0';
             int result = multiplyingInt * multiplicandInt;
-            result += carry;
-            char val = result % 10 + '0';
-            carry = result / 10;
-            intermediate.push_back(val);
+            int sint1 = 0;
+
+            if (iters1 != rend(s1))
+            {
+                if (*iters1 == '*')
+                    sint1 = 0;
+                else
+                    sint1 = *iters1 - '0';
+            }
+            char valG = (sint1 + result + carryG) % 10 + '0';
+            carryG = (sint1 + result + carryG) / 10;
+            *iters1 = valG;
+            if (iters1 != rend(s1))
+                iters1++;
         }
-        if (carry)
-            intermediate.push_back(
-                carry + '0');
-        reverse(intermediate.begin(), intermediate.end());
-        joinSecondStringToFirst(output, intermediate, ++offset);
+        ++offset;
+        //Global carry
+        if (carryG)
+        {
+            int currIterVal = 0;
+            if (*iters1 == '*')
+                currIterVal = 0;
+            else
+                currIterVal = *iters1 - '0';
+            *(iters1) = (currIterVal + carryG) % 10 + '0';
+            carryG = (currIterVal + carryG) / 10;
+        }
     }
-    return output;
+    if (carryG)
+        *(begin(output)) = carryG + '0';
 }
 int main()
 {
     // string multiplier1 = "456";
     //string multiplier1 = "27121";
     //string multiplier2 = "51221";
-    string multiplier1 = "10";
-    string multiplier2 = "10";
+    string multiplier1 = "11";
+    string multiplier2 = "11";
     int length1 = multiplier1.length();
     int length2 = multiplier2.length();
     int maxLength = length1 + length2;
