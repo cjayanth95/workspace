@@ -1,13 +1,13 @@
 #include <iostream>
 using namespace std;
 int factorial(int n) {
-    cout<<"hit here"<<endl;
+  cout << "hit here" << endl;
   int result = 1;
   while (n) {
-      cout<<"hit here as well"<<endl;
+    cout << "hit here as well" << endl;
     result *= n;
     n--;
-    cout<<result<<endl;
+    cout << result << endl;
   }
   return result;
 }
