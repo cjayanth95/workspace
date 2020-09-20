@@ -1,0 +1,24 @@
+[file-build]
+command=g++ -g "$(VIM_FILEPATH)" -o  $(VIM_FILENOEXT)
+cwd=$(VIM_FILEDIR)
+
+[file-run]
+command="$(VIM_FILEDIR)\$(VIM_FILENOEXT)"
+cwd=$(VIM_FILEDIR)
+output=terminal
+
+[project-init]
+command=cd <root> && mkdir build && cd build && cmake .. -G "MinGW Makefiles"
+cwd=<root>
+errorformat=
+
+[project-build]
+command=cd <root> && cmake --build build
+cwd=$(VIM_ROOT)
+errorformat=%f:%l:%m
+
+[project-run]
+command= "build/$(VIM_PRONAME)"
+# <root> is an alias to `$(VIM_ROOT)`, a little easier to type.
+cwd="$(VIM_ROOT)/build"
+output=terminal
