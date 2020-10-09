@@ -9,12 +9,14 @@ vector<int> ComputeKLargestInMaxHeap(vector<int> &A, int K) {
   struct HeapEntry {
     int idx;
     int value;
-    bool operator<(const HeapEntry &entry) { return value < entry.value; }
   };
   if (K < 0)
     return {};
-  priority_queue<HeapEntry, vector<HeapEntry>, less<>> max_heap;
-
+  priority_queue<HeapEntry, vector<HeapEntry>,
+                 function<bool(HeapEntry, HeapEntry)>>
+  max_heap([](const HeapEntry &h1, const HeapEntry &h2) -> bool {
+    return h1.value < h2.value;
+  });
   max_heap.emplace(HeapEntry{0, A[0]});
   vector<int> result;
   for (int i = 0; i < K; i++) {
