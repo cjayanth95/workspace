@@ -3,7 +3,7 @@ command=g++ -g "$(VIM_FILEPATH)" -o  $(VIM_FILENOEXT)
 cwd=$(VIM_FILEDIR)
 
 [file-run]
-command="$(VIM_FILEDIR)\$(VIM_FILENOEXT)"
+command="$(VIM_FILEDIR)/$(VIM_FILENOEXT)"
 cwd=$(VIM_FILEDIR)
 output=terminal
 
